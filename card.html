@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Runaway Button</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@500&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(135deg, #B78FFF 0%, #A4C4FF 100%);
+      font-family: 'Quicksand', sans-serif;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Runaway Button */
+    #runawayButton {
+      background: white;
+      color: #8A6FCF;
+      border: none;
+      padding: 1.2rem 2.5rem;
+      font-size: 1.2rem;
+      border-radius: 18px;
+      cursor: pointer;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      box-shadow: 0 20px 60px rgba(138, 111, 207, 0.3);
+      font-weight: bold;
+      transition: transform 0.4s ease-out, left 0.4s ease, top 0.4s ease, box-shadow 0.4s ease;
+      user-select: none;
+    }
+
+    /* Message */
+    #message {
+      font-size: 3rem;
+      color: white;
+      font-weight: bold;
+      margin-top: 2rem;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out, transform 1s ease-in-out;
+      position: absolute;
+      top: 44%;
+    }
+
+    /* New Button */
+    #newButton {
+      width: 320px;
+      height: 85px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: white;
+      border: none;
+      border-radius: 12px;
+      box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+      transition: all 0.4s ease;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      padding: 0 30px;
+      font-size: 1.4rem;
+      font-weight: bold;
+      overflow: hidden;
+    }
+
+    /* Button Text */
+    #newButton .text {
+      flex: 1;
+      text-align: left;
+      padding-left: 15px;
+      background: linear-gradient(135deg, #B78FFF 0%, #A4C4FF 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-size: 1.7rem;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+    }
+
+    /* Icon (Heart) */
+    #newButton .icon {
+      position: absolute;
+      right: 35px;  /* Start on the right side of the button */
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px; /* Smaller size */
+      height: 30px; /* Smaller size */
+      transition: transform 0.3s ease, right 0.3s ease;
+    }
+
+    /* Hover Animation for New Button */
+    #newButton:hover {
+      background: #f0f0f0;
+      justify-content: center; /* Center children on hover */
+    }
+
+    #newButton:hover .text {
+      opacity: 0;
+      transform: translateX(-150%);
+    }
+
+    /* Move the heart to the center when text slides away */
+    #newButton:hover .icon {
+      right: 42%;  /* Move heart to the center */
+      transform: translate(-50%, -50%) scale(1.5); /* Center and enlarge the heart */
+    }
+
+    #newButton:active .icon svg {
+      transform: scale(0.8);
+    }
+  </style>
+</head>
+<body>
+  <button id="runawayButton">do NOT click me</button>
+  <div id="message">FINE! You got me.</div>
+
+  <!-- Gradient Definition for the Heart -->
+  <svg width="0" height="0">
+    <defs>
+      <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" style="stop-color:#B78FFF;stop-opacity:1" />
+        <stop offset="100%" style="stop-color:#A4C4FF;stop-opacity:1" />
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <script>
+    const button = document.getElementById('runawayButton');
+    const message = document.getElementById('message');
+    const maxMoves = 7;
+    const positions = [
+      { left: "20%", top: "30%" },
+      { left: "75%", top: "25%" },
+      { left: "15%", top: "70%" },
+      { left: "80%", top: "65%" },
+      { left: "40%", top: "85%" },
+      { left: "60%", top: "10%" },
+      { left: "50%", top: "50%" }
+    ];
+    let moveCount = 0;
+
+    button.addEventListener('mouseover', () => {
+      if (moveCount < maxMoves) {
+        moveButton();
+      } else {
+        resetButton();
+      }
+    });
+
+    function moveButton() {
+      const newPosition = positions[moveCount];
+      button.style.left = newPosition.left;
+      button.style.top = newPosition.top;
+      moveCount++;
+    }
+
+    function resetButton() {
+      setTimeout(() => {
+        button.style.display = 'none';
+        message.style.opacity = "1";
+
+        setTimeout(() => {
+          message.style.transform = "translateY(-50px)";
+
+          setTimeout(() => {
+            const newButton = document.createElement('button');
+            newButton.id = 'newButton';
+            newButton.innerHTML = `
+              <span class="text">Heyy maaan</span>
+              <div class="icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                  <defs>
+                    <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style="stop-color:#B78FFF;stop-opacity:1" />
+                      <stop offset="100%" style="stop-color:#A4C4FF;stop-opacity:1" />
+                    </linearGradient>
+                  </defs>
+                  <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="url(#heartGradient)"/>
+                </svg>
+              </div>
+            `;
+            document.body.appendChild(newButton);
+
+            setTimeout(() => {
+              newButton.style.opacity = 1;
+              newButton.style.top = "60%";
+              newButton.style.transform = "translate(-50%, -50%) scale(1)";
+            }, 100);
+
+            newButton.addEventListener('click', () => {
+              alert("Button Clicked!");
+            });
+          }, 400);
+        }, 1500);
+      }, 300);
+    }
+  </script>
+</body>
+</html>
